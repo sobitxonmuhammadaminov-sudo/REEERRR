@@ -1,0 +1,119 @@
+2026-08-11 22:46:37,244 - ReferralBot - INFO - Baza muvaffaqiyatli yaratildi va ulandi.
+2026-08-11 22:49:47,060 - ReferralBot - INFO - Baza muvaffaqiyatli yaratildi va ulandi.
+2026-08-11 22:49:47,088 - ReferralBot - INFO - Bot ishga tushdi...
+2026-08-11 22:52:48,597 - ReferralBot - INFO - Baza muvaffaqiyatli yaratildi va ulandi.
+2026-08-11 22:52:48,626 - ReferralBot - INFO - Bot ishga tushdi...
+2026-08-11 22:54:45,665 - ReferralBot - INFO - Baza muvaffaqiyatli yaratildi va ulandi.
+2026-08-11 22:54:45,698 - ReferralBot - INFO - Bot ishga tushdi...
+2026-08-11 22:59:17,426 - ReferralBot - INFO - Bot to'xtatildi.
+2026-08-11 23:18:19,153 - ReferralBot - INFO - Baza muvaffaqiyatli yaratildi va ulandi.
+2026-08-11 23:18:19,154 - ReferralBot - INFO - Bot ishga tushdi...
+2026-08-11 23:24:16,560 - ReferralBot - INFO - Bot to'xtatildi.
+2026-08-11 23:24:20,151 - ReferralBot - INFO - Baza muvaffaqiyatli yaratildi va ulandi.
+2026-08-11 23:24:20,152 - ReferralBot - INFO - Bot ishga tushdi...
+2026-08-11 23:24:39,164 - ReferralBot - INFO - Yangi foydalanuvchi: 6705166692 (Referrer: None)
+2026-08-11 23:28:36,516 - ReferralBot - INFO - Admin 6705166692 tomonidan Majburiy kanal qo'shildi: s'
+2026-08-11 23:29:10,388 - ReferralBot - INFO - Yangi foydalanuvchi: 8860097716 (Referrer: None)
+2026-08-11 23:42:14,250 - ReferralBot - INFO - Bot to'xtatildi.
+2026-08-11 23:42:18,358 - ReferralBot - INFO - Baza muvaffaqiyatli yaratildi va ulandi.
+2026-08-11 23:42:18,359 - ReferralBot - INFO - Bot ishga tushdi...
+2026-08-11 23:44:38,084 - ReferralBot - INFO - Admin 6705166692 tomonidan Oddiy kanal qo'shildi: test uchun
+2026-08-11 23:47:04,516 - ReferralBot - ERROR - Kanal ma'lumotlarini olishda xatolik: (sqlalchemy.dialects.postgresql.asyncpg.IntegrityError) <class 'asyncpg.exceptions.UniqueViolationError'>: повторяющееся значение ключа нарушает ограничение уникальности "channels_channel_id_key"
+DETAIL:  Ключ "(channel_id)=(-1003906882004)" уже существует.
+[SQL: INSERT INTO channels (channel_id, username, title, invite_link, channel_type, is_active) VALUES ($1::BIGINT, $2::VARCHAR, $3::VARCHAR, $4::VARCHAR, $5::channeltype, $6::BOOLEAN) RETURNING channels.id, channels.created_at]
+[parameters: (-1003906882004, 'xwwxwxz', "s'", 'https://t.me/+7025PdBRCwA4Yzk6', 'MANDATORY', True)]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
+2026-08-11 23:47:54,360 - ReferralBot - ERROR - Kanal ma'lumotlarini olishda xatolik: (sqlalchemy.dialects.postgresql.asyncpg.IntegrityError) <class 'asyncpg.exceptions.UniqueViolationError'>: повторяющееся значение ключа нарушает ограничение уникальности "channels_channel_id_key"
+DETAIL:  Ключ "(channel_id)=(-1003906882004)" уже существует.
+[SQL: INSERT INTO channels (channel_id, username, title, invite_link, channel_type, is_active) VALUES ($1::BIGINT, $2::VARCHAR, $3::VARCHAR, $4::VARCHAR, $5::channeltype, $6::BOOLEAN) RETURNING channels.id, channels.created_at]
+[parameters: (-1003906882004, 'xwwxwxz', "s'", 'https://t.me/+7025PdBRCwA4Yzk6', 'MANDATORY', True)]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
+2026-08-11 23:55:55,716 - ReferralBot - INFO - Bot to'xtatildi.
+2026-08-11 23:56:00,302 - ReferralBot - INFO - Baza muvaffaqiyatli yaratildi va ulandi.
+2026-08-11 23:56:00,303 - ReferralBot - INFO - Bot ishga tushdi...
+2026-08-12 00:00:00,523 - ReferralBot - INFO - Bot to'xtatildi.
+2026-08-12 00:00:03,995 - ReferralBot - INFO - Baza muvaffaqiyatli yaratildi va ulandi.
+2026-08-12 00:00:03,995 - ReferralBot - INFO - Bot ishga tushdi...
+2026-08-12 13:24:09,099 - ReferralBot - INFO - Baza muvaffaqiyatli yaratildi va ulandi.
+2026-08-12 13:24:09,105 - ReferralBot - INFO - Bot ishga tushdi...
+2026-08-12 13:24:10,365 - ReferralBot - INFO - Yangi foydalanuvchi: 1873244570 (Referrer: None)
+2026-08-12 13:57:14,509 - ReferralBot - INFO - Baza muvaffaqiyatli yaratildi va ulandi.
+2026-08-12 13:57:14,510 - ReferralBot - INFO - Bot ishga tushdi...
+2026-08-12 13:58:11,029 - ReferralBot - INFO - Bot to'xtatildi.
+2026-08-12 13:58:14,892 - ReferralBot - INFO - Baza muvaffaqiyatli yaratildi va ulandi.
+2026-08-12 13:58:14,892 - ReferralBot - INFO - Bot ishga tushdi...
+2026-08-12 13:58:19,689 - ReferralBot - ERROR - Obuna tekshirishda xatolik (Kanal: -1003906882004, Foydalanuvchi: 6705166692): Telegram server says - Bad Request: chat not found
+2026-08-12 13:58:24,790 - ReferralBot - ERROR - Obuna tekshirishda xatolik (Kanal: -1003906882004, Foydalanuvchi: 6705166692): Telegram server says - Bad Request: chat not found
+2026-08-12 13:58:34,321 - ReferralBot - ERROR - Obuna tekshirishda xatolik (Kanal: -1003906882004, Foydalanuvchi: 6705166692): Telegram server says - Bad Request: chat not found
+2026-08-12 14:00:16,621 - ReferralBot - ERROR - Obuna tekshirishda xatolik (Kanal: -1003906882004, Foydalanuvchi: 6705166692): Telegram server says - Bad Request: chat not found
+2026-08-12 14:04:09,721 - ReferralBot - INFO - Yangi foydalanuvchi: 5487422248 (Referrer: 8860097716)
+2026-08-12 14:05:07,929 - ReferralBot - INFO - Admin 6705166692 tomonidan Oddiy kanal o'chirildi: test uchun
+2026-08-12 14:05:10,750 - ReferralBot - INFO - Admin 6705166692 tomonidan Oddiy kanal o'chirildi: test uchun
+2026-08-12 14:05:51,921 - ReferralBot - INFO - Admin 6705166692 tomonidan Oddiy kanal o'chirildi: test uchun
+2026-08-12 14:06:10,298 - ReferralBot - INFO - Admin 6705166692 tomonidan Oddiy kanal o'chirildi: test uchun
+2026-08-12 14:06:53,524 - ReferralBot - INFO - Admin 6705166692 tomonidan Majburiy kanal o'chirildi: s'
+2026-08-12 14:07:00,489 - ReferralBot - INFO - Admin 6705166692 tomonidan Majburiy kanal o'chirildi: s'
+2026-08-12 14:07:17,613 - ReferralBot - ERROR - Obuna tekshirishda xatolik (Kanal: -1003906882004, Foydalanuvchi: 6705166692): Telegram server says - Bad Request: member list is inaccessible
+2026-08-12 14:07:22,013 - ReferralBot - ERROR - Obuna tekshirishda xatolik (Kanal: -1003906882004, Foydalanuvchi: 6705166692): Telegram server says - Bad Request: member list is inaccessible
+2026-08-12 14:08:23,772 - ReferralBot - ERROR - Obuna tekshirishda xatolik (Kanal: -1003906882004, Foydalanuvchi: 5487422248): Telegram server says - Bad Request: member list is inaccessible
+2026-08-12 14:08:30,982 - ReferralBot - ERROR - Obuna tekshirishda xatolik (Kanal: -1003906882004, Foydalanuvchi: 5487422248): Telegram server says - Bad Request: member list is inaccessible
+2026-08-12 14:15:18,793 - ReferralBot - INFO - Bot to'xtatildi.
+2026-08-12 14:15:24,067 - ReferralBot - INFO - Baza muvaffaqiyatli yaratildi va ulandi.
+2026-08-12 14:15:24,068 - ReferralBot - INFO - Bot ishga tushdi...
+2026-08-12 14:15:32,398 - ReferralBot - ERROR - get_all_mandatory_channels funksiyasi queries.py da topilmadi!
+2026-08-12 14:15:40,158 - ReferralBot - INFO - Admin 6705166692 tomonidan Oddiy kanal o'chirildi: test uchun
+2026-08-12 14:18:21,009 - ReferralBot - INFO - Admin 6705166692 tomonidan Majburiy kanal o'chirildi: s'
+2026-08-12 14:18:31,728 - ReferralBot - INFO - Admin 6705166692 tomonidan Majburiy kanal o'chirildi: s'
+2026-08-12 14:18:37,462 - ReferralBot - ERROR - get_all_mandatory_channels funksiyasi queries.py da topilmadi!
+2026-08-12 14:19:18,186 - ReferralBot - ERROR - get_all_mandatory_channels funksiyasi queries.py da topilmadi!
+2026-08-12 14:19:25,419 - ReferralBot - ERROR - get_all_mandatory_channels funksiyasi queries.py da topilmadi!
+2026-08-12 14:25:48,604 - ReferralBot - INFO - Bot to'xtatildi.
+2026-08-12 14:25:52,086 - ReferralBot - INFO - Baza muvaffaqiyatli yaratildi va ulandi.
+2026-08-12 14:25:52,086 - ReferralBot - INFO - Bot ishga tushdi...
+2026-08-12 14:26:00,310 - ReferralBot - ERROR - get_all_mandatory_channels funksiyasi queries.py da topilmadi!
+2026-08-12 14:28:37,068 - ReferralBot - ERROR - get_all_mandatory_channels funksiyasi queries.py da topilmadi!
+2026-08-12 14:28:45,919 - ReferralBot - INFO - Bot to'xtatildi.
+2026-08-12 14:45:36,524 - ReferralBot - INFO - Baza muvaffaqiyatli yaratildi va ulandi.
+2026-08-12 14:45:36,524 - ReferralBot - INFO - Bot ishga tushdi...
+2026-08-12 14:45:37,531 - ReferralBot - ERROR - Ma'lumotlar bazasidan kanallarni olishda xatolik: type object 'Channel' has no attribute 'type'
+2026-08-12 14:45:37,760 - ReferralBot - ERROR - Ma'lumotlar bazasidan kanallarni olishda xatolik: type object 'Channel' has no attribute 'type'
+2026-08-12 14:45:46,080 - ReferralBot - ERROR - Ma'lumotlar bazasidan kanallarni olishda xatolik: type object 'Channel' has no attribute 'type'
+2026-08-12 14:45:52,682 - ReferralBot - ERROR - Ma'lumotlar bazasidan kanallarni olishda xatolik: type object 'Channel' has no attribute 'type'
+2026-08-12 14:46:29,797 - ReferralBot - ERROR - Ma'lumotlar bazasidan kanallarni olishda xatolik: type object 'Channel' has no attribute 'type'
+2026-08-12 14:55:53,199 - ReferralBot - INFO - Bot to'xtatildi.
+2026-08-12 14:55:56,745 - ReferralBot - INFO - Baza muvaffaqiyatli yaratildi va ulandi.
+2026-08-12 14:55:56,745 - ReferralBot - INFO - Bot ishga tushdi...
+2026-08-12 15:21:03,001 - ReferralBot - INFO - Bot to'xtatildi.
+2026-08-12 15:21:06,899 - ReferralBot - INFO - Baza muvaffaqiyatli yaratildi va ulandi.
+2026-08-12 15:21:06,900 - ReferralBot - INFO - Bot ishga tushdi...
+2026-08-12 15:21:14,304 - ReferralBot - ERROR - Obuna tekshirishda xatolik: Telegram server says - Bad Request: member list is inaccessible
+2026-08-12 17:22:07,467 - ReferralBot - INFO - Bot to'xtatildi.
+2026-08-12 19:57:01,333 - ReferralBot - INFO - Baza muvaffaqiyatli yaratildi va ulandi.
+2026-08-12 19:57:01,334 - ReferralBot - INFO - Bot ishga tushdi...
+2026-08-12 20:04:28,462 - ReferralBot - INFO - Bot to'xtatildi.
+2026-08-12 20:04:32,465 - ReferralBot - INFO - Bot ishga tushdi...
+2026-08-12 20:10:17,296 - ReferralBot - ERROR - Obuna tekshirishda xatolik: Telegram server says - Bad Request: chat not found
+2026-08-12 20:10:21,358 - ReferralBot - ERROR - Obuna tekshirishda xatolik: Telegram server says - Bad Request: chat not found
+2026-08-12 20:10:27,902 - ReferralBot - ERROR - Obuna tekshirishda xatolik: Telegram server says - Bad Request: chat not found
+2026-08-12 20:10:30,975 - ReferralBot - ERROR - Obuna tekshirishda xatolik: Telegram server says - Bad Request: chat not found
+2026-08-12 20:10:33,054 - ReferralBot - ERROR - Obuna tekshirishda xatolik: Telegram server says - Bad Request: chat not found
+2026-08-12 20:11:10,593 - ReferralBot - ERROR - Obuna tekshirishda xatolik: Telegram server says - Bad Request: chat not found
+2026-08-12 20:17:18,148 - ReferralBot - ERROR - Obuna tekshirishda xatolik: Telegram server says - Bad Request: chat not found
+2026-08-12 20:17:40,587 - ReferralBot - ERROR - Obuna tekshirishda xatolik: Telegram server says - Bad Request: chat not found
+2026-08-12 20:20:50,217 - ReferralBot - ERROR - Obuna tekshirishda xatolik: Telegram server says - Bad Request: chat not found
+2026-08-12 20:25:09,610 - ReferralBot - ERROR - Obuna tekshirishda xatolik: Telegram server says - Bad Request: chat not found
+2026-08-12 20:25:11,583 - ReferralBot - INFO - Bot to'xtatildi (Ctrl+C)
+2026-08-12 20:31:21,495 - ReferralBot - INFO - Baza muvaffaqiyatli yaratildi va ulandi.
+2026-08-12 20:31:21,510 - ReferralBot - INFO - Bot ishga tushdi...
+2026-08-12 20:31:27,307 - ReferralBot - ERROR - Obuna tekshirishda xatolik: Telegram server says - Bad Request: chat not found
+2026-08-12 21:50:36,748 - ReferralBot - INFO - Baza muvaffaqiyatli yaratildi va ulandi.
+2026-08-12 21:50:36,764 - ReferralBot - INFO - Bot ishga tushdi...
+2026-08-12 21:57:12,890 - ReferralBot - INFO - Bot to'xtatildi (Ctrl+C)
+2026-08-12 21:57:17,667 - ReferralBot - INFO - Baza muvaffaqiyatli yaratildi va ulandi.
+2026-08-12 21:57:17,703 - ReferralBot - INFO - Bot ishga tushdi...
+2026-08-12 21:58:17,402 - ReferralBot - ERROR - Kanal qo'shishda xato: HTTP Client says - ClientOSError: [WinError 121] Превышен таймаут семафора
+2026-08-12 22:44:56,860 - ReferralBot - INFO - Yangi foydalanuvchi: 7342450619 (Referrer: None)
+2026-08-12 23:07:14,055 - ReferralBot - INFO - Bot to'xtatildi (Ctrl+C)
+2026-08-13 18:03:27,217 - ReferralBot - INFO - Baza muvaffaqiyatli yaratildi va ulandi.
+2026-08-13 18:03:27,263 - ReferralBot - INFO - Bot ishga tushdi...
+2026-08-13 18:29:35,371 - ReferralBot - INFO - Bot to'xtatildi (Ctrl+C)
