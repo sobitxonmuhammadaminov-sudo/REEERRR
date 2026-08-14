@@ -10,8 +10,15 @@ from utils.logger import logger
 
 # Bot ishga tushishidan AVVAL ma'lumotlar bazasi jadvallarini yaratamiz
 async def on_startup():
-    async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.create_all)
+    try:
+        async with engine.begin() as conn:
+            await conn.run_sync(Base.metadata.create_all)
+
+        logger.info("✅ Barcha database jadvallari yaratildi.")
+
+    except Exception as e:
+        logger.error(f"❌ Database jadvallarini yaratishda xato: {e}")
+        raise
     logger.info("Baza muvaffaqiyatli yaratildi va ulandi.")
 
 async def main():
