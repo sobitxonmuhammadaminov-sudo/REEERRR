@@ -16,10 +16,12 @@ class Base(DeclarativeBase):
 engine = create_async_engine(
     DATABASE_URL,
     echo=False,
+    pool_pre_ping=True,
     connect_args={
         "ssl": "require",
     },
 )
+
 
 async_session = async_sessionmaker(
     bind=engine,
@@ -29,18 +31,28 @@ async_session = async_sessionmaker(
 
 
 async def init_db():
+    """
+    Database jadvallarini yaratadi.
+    Bu funksiya bot ishga tushganda faqat bir marta chaqiriladi.
+    """
     try:
+        # Modellarni metadata'ga yuklaymiz
+        from database import models  # noqa: F401
+
         async with engine.begin() as conn:
             await conn.run_sync(Base.metadata.create_all)
 
-        logger.info("Baza muvaffaqiyatli yaratildi va ulandi.")
+        logger.info("✅ Barcha database jadvallari yaratildi.")
 
     except Exception as e:
-        logger.error(f"Database ulanish xatosi: {e}")
+        logger.error(f"❌ Database jadvallarini yaratishda xato: {e}")
         raise
 
 
 async def get_session():
+    """
+    Database session olish uchun generator.
+    """
     async with async_session() as session:
         try:
             yield session
@@ -48,10 +60,17 @@ async def get_session():
 
         except Exception as e:
             await session.rollback()
-            logger.error(f"Database xatolik: {e}")
+            logger.error(f"❌ Database xatolik: {e}")
             raise
 
 
 async def close_db():
-    await engine.dispose()
-    logger.info("Database connection yopildi.")
+    """
+    Database connection pool'ni yopadi.
+    """
+    try:
+        await engine.dispose()
+        logger.info("✅ Database connection yopildi.")
+
+    except Exception as e:
+        logger.error(f"❌ Database yopishda xato: {e}")
