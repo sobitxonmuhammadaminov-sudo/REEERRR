@@ -13,15 +13,13 @@ class Base(DeclarativeBase):
     pass
 
 
-# Neon PostgreSQL
 engine = create_async_engine(
     DATABASE_URL,
     echo=False,
     connect_args={
-        "ssl": "require"
+        "ssl": "require",
     },
 )
-
 
 async_session = async_sessionmaker(
     bind=engine,
