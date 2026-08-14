@@ -1,106 +1,430 @@
 from aiogram import Router, F, Bot
-from aiogram.types import CallbackQuery
+from aiogram.types import CallbackQuery, Message
 from aiogram.exceptions import TelegramBadRequest
-from sqlalchemy import select
+from sqlalchemy import select, func
 
-from keyboards.user import main_menu_kb, back_to_main_kb
+from keyboards.user import main_menu_kb
 from utils.helpers import build_channel_buttons
 from services.subscriptions import get_unsubscribed_mandatory_channels
 from database.database import get_session
 from database import queries
-from database.models import Channel, ChannelType
+from database.models import Channel, ChannelType, RewardLink, User
 from config import REQUIRED_REFERRALS
+from utils.logger import logger
+
 
 router = Router()
 
-async def safe_edit(callback: CallbackQuery, text: str, reply_markup=None):
-    try:
-        await callback.message.edit_text(text, reply_markup=reply_markup, parse_mode="HTML")
-    except TelegramBadRequest as e:
-        if "message is not modified" not in str(e):
-            raise e
 
-@router.callback_query(F.data == "menu_profile")
-async def show_profile(callback: CallbackQuery):
-    await callback.answer()
-    user_id = callback.from_user.id
+# ============================================================
+# MY PROFILE
+# ============================================================
+
+@router.message(F.text == "👤 My Profile")
+async def show_profile(message: Message):
+    user_id = message.from_user.id
+
+    logger.info(f"👤 My Profile bosildi: {user_id}")
+
     user = None
+
     async for session in get_session():
-        user = await queries.get_user_by_telegram_id(session, user_id)
-    
-    if user:
-        ism = user.full_name or "Ko'rsatilmagan"
-        username = user.username or "yo'q"
-        text = f"👤 <b>Sizning profilingiz</b>\n\n🆔 ID: <code>{user.telegram_id}</code>\n📛 Ism: {ism}\n🌐 Username: @{username}"
-    else:
-        text = "❌ Ma'lumot topilmadi."
-    await safe_edit(callback, text, reply_markup=back_to_main_kb())
+        user = await queries.get_user_by_telegram_id(
+            session,
+            user_id
+        )
 
-@router.callback_query(F.data == "menu_referral")
-async def show_referral(callback: CallbackQuery, bot: Bot):
-    await callback.answer()
-    bot_info = await bot.get_me()
-    link = f"https://t.me/{bot_info.username}?start={callback.from_user.id}"
-    text = f"🔗 <b>Sizning havolangiz:</b>\n\n<code>{link}</code>\n\n📌 Do'stlaringizga yuboring. Sizga yana <b>{REQUIRED_REFERRALS}</b> ta odam kerak."
-    await safe_edit(callback, text, reply_markup=back_to_main_kb())
+    if not user:
+        await message.answer(
+            "❌ User not found."
+        )
+        return
 
-@router.callback_query(F.data == "menu_ref_stats")
-async def show_stats(callback: CallbackQuery):
-    await callback.answer()
-    count = 0 
-    text = f"📊 <b>Statistika</b>\n\nJami takliflar: <b>{count}</b> ta\nKerakli: <b>{REQUIRED_REFERRALS}</b> ta\nQolgan: <b>{max(0, REQUIRED_REFERRALS - count)}</b> ta"
-    await safe_edit(callback, text, reply_markup=back_to_main_kb())
+    name = user.full_name or "Not specified"
+    username = user.username or "None"
 
-@router.callback_query(F.data == "menu_reward")
-async def show_reward(callback: CallbackQuery):
-    await callback.answer()
-    count = 0 
-    if count >= REQUIRED_REFERRALS:
-        async for session in get_session():
-            stmt = select(Channel).where(Channel.channel_type == ChannelType.REWARD, Channel.is_active == True).first()
-            result = await session.execute(stmt)
-            reward_ch = result.scalar_one_or_none()
-            
-        if reward_ch:
-            link = reward_ch.invite_link
-            if not link and reward_ch.username:
-                link = f"https://t.me/{reward_ch.username.lstrip('@')}"
-            text = f"🎉 <b>Tabriklaymiz!</b> Siz {REQUIRED_REFERRALS} ta odamni taklif qildingiz!\n\n🎁 <b>Mukofot kanali:</b>\n{link}"
+    text = (
+        "👤 <b>Your Profile</b>\n\n"
+        f"🆔 ID: <code>{user.telegram_id}</code>\n"
+        f"📛 Name: {name}\n"
+        f"🌐 Username: @{username}"
+    )
+
+    await message.answer(
+        text,
+        parse_mode="HTML"
+    )
+
+
+# ============================================================
+# MY REFERRALS
+# ============================================================
+
+@router.message(F.text == "📊 My Referrals")
+async def show_stats(message: Message):
+    user_id = message.from_user.id
+
+    logger.info(f"📊 My Referrals bosildi: {user_id}")
+
+    count = 0
+
+    async for session in get_session():
+
+        stmt = (
+            select(func.count())
+            .select_from(User)
+            .where(User.referred_by == user_id)
+        )
+
+        result = await session.execute(stmt)
+
+        count = result.scalar() or 0
+
+    remaining = max(
+        0,
+        REQUIRED_REFERRALS - count
+    )
+
+    text = (
+        "📊 <b>My Referrals</b>\n\n"
+        f"👥 Total Invites: <b>{count}</b>\n"
+        f"🎯 Required: <b>{REQUIRED_REFERRALS}</b>\n"
+        f"⏳ Remaining: <b>{remaining}</b>"
+    )
+
+    await message.answer(
+        text,
+        parse_mode="HTML"
+    )
+
+
+# ============================================================
+# CLAIM REWARD
+# ============================================================
+
+@router.message(F.text == "🎁 Claim Reward")
+async def show_reward(
+    message: Message,
+    bot: Bot
+):
+    user_id = message.from_user.id
+
+    logger.info(f"🎁 Claim Reward bosildi: {user_id}")
+
+    count = 0
+
+    # --------------------------------------------------------
+    # Referral sonini tekshirish
+    # --------------------------------------------------------
+
+    async for session in get_session():
+
+        stmt = (
+            select(func.count())
+            .select_from(User)
+            .where(User.referred_by == user_id)
+        )
+
+        result = await session.execute(stmt)
+
+        count = result.scalar() or 0
+
+    # --------------------------------------------------------
+    # Yetarli referral bo'lmasa
+    # --------------------------------------------------------
+
+    if count < REQUIRED_REFERRALS:
+
+        remaining = max(
+            0,
+            REQUIRED_REFERRALS - count
+        )
+
+        text = (
+            "🎁 <b>Reward</b>\n\n"
+            f"👥 You need <b>{remaining}</b> "
+            "more friends.\n\n"
+            "🔗 Invite your friends using "
+            "your referral link!"
+        )
+
+        await message.answer(
+            text,
+            parse_mode="HTML"
+        )
+
+        return
+
+    # --------------------------------------------------------
+    # Reward channel va link
+    # --------------------------------------------------------
+
+    async for session in get_session():
+
+        # Oldingi reward linkni qidiramiz
+        stmt_check = (
+            select(RewardLink)
+            .where(
+                RewardLink.user_id == user_id
+            )
+        )
+
+        result_check = await session.execute(
+            stmt_check
+        )
+
+        existing_link = (
+            result_check.scalar_one_or_none()
+        )
+
+        # Reward channelni qidiramiz
+        stmt_channel = (
+            select(Channel)
+            .where(
+                Channel.channel_type
+                == ChannelType.REWARD
+            )
+        )
+
+        result_channel = await session.execute(
+            stmt_channel
+        )
+
+        reward_channel = (
+            result_channel.scalars().first()
+        )
+
+        if not reward_channel:
+
+            await message.answer(
+                "❌ There are no reward channels "
+                "available right now."
+            )
+
+            return
+
+        # ----------------------------------------------------
+        # Agar link oldin yaratilgan bo'lsa
+        # ----------------------------------------------------
+
+        if existing_link:
+
+            generated_link = existing_link.token
+
         else:
-            text = "❌ Hozirda mukofot kanallari mavjud emas."
-    else:
-        text = f"🎁 <b>Mukofot</b>\n\nSizga yana <b>{max(0, REQUIRED_REFERRALS - count)}</b> ta odam kerak."
-    await safe_edit(callback, text, reply_markup=back_to_main_kb())
 
-@router.callback_query(F.data == "menu_channels")
-async def show_channels(callback: CallbackQuery, bot: Bot):
+            try:
+
+                chat_invite = (
+                    await bot.create_chat_invite_link(
+                        chat_id=reward_channel.channel_id,
+                        member_limit=1,
+                        name=f"Reward for {user_id}"
+                    )
+                )
+
+                generated_link = (
+                    chat_invite.invite_link
+                )
+
+                new_link = RewardLink(
+                    token=generated_link,
+                    channel_id=reward_channel.id,
+                    user_id=user_id
+                )
+
+                session.add(new_link)
+
+                await session.commit()
+
+            except TelegramBadRequest as e:
+
+                logger.error(
+                    f"Reward link yaratishda xato: {e}"
+                )
+
+                await message.answer(
+                    "❌ Error creating reward link.\n\n"
+                    "The bot must be an administrator "
+                    "of the reward channel."
+                )
+
+                return
+
+    # --------------------------------------------------------
+    # Linkni foydalanuvchiga yuborish
+    # --------------------------------------------------------
+
+    await message.answer(
+        "🎉 <b>Congratulations!</b>\n\n"
+        f"You have invited "
+        f"<b>{REQUIRED_REFERRALS}</b> friends!\n\n"
+        "🎁 <b>Your exclusive 1-time link:</b>\n\n"
+        f"{generated_link}\n\n"
+        "⚠️ Click on it to join the channel!",
+        parse_mode="HTML"
+    )
+
+
+# ============================================================
+# SAFE EDIT
+# ============================================================
+
+async def safe_edit(
+    callback: CallbackQuery,
+    text: str,
+    reply_markup=None
+):
+    try:
+
+        await callback.message.edit_text(
+            text,
+            reply_markup=reply_markup,
+            parse_mode="HTML"
+        )
+
+    except TelegramBadRequest as e:
+
+        if "message is not modified" not in str(e):
+            raise
+
+
+# ============================================================
+# CHANNELS
+# ============================================================
+
+@router.callback_query(
+    F.data == "menu_channels"
+)
+async def show_channels(
+    callback: CallbackQuery,
+    bot: Bot
+):
     await callback.answer()
-    unsubscribed = await get_unsubscribed_mandatory_channels(bot, callback.from_user.id)
+
+    user_id = callback.from_user.id
+
+    unsubscribed = (
+        await get_unsubscribed_mandatory_channels(
+            bot,
+            user_id
+        )
+    )
+
     if unsubscribed:
-        text = "📢 <b>Majburiy kanallar</b>\n\nObuna bo'ling:"
-        kb = build_channel_buttons(unsubscribed, "check_sub_from_menu")
-        await safe_edit(callback, text, reply_markup=kb)
+
+        text = (
+            "📢 <b>Mandatory Channels</b>\n\n"
+            "Please subscribe:"
+        )
+
+        kb = build_channel_buttons(
+            unsubscribed,
+            "check_sub_from_menu"
+        )
+
+        await safe_edit(
+            callback,
+            text,
+            reply_markup=kb
+        )
+
     else:
-        text = "✅ Siz barcha kanallarga obuna bo'ldingiz!"
-        await safe_edit(callback, text, reply_markup=back_to_main_kb())
 
-@router.callback_query(F.data == "check_sub_from_menu")
-async def check_sub_from_menu(callback: CallbackQuery, bot: Bot):
+        text = (
+            "✅ You are subscribed "
+            "to all channels!"
+        )
+
+        await safe_edit(
+            callback,
+            text,
+            reply_markup=main_menu_kb()
+        )
+
+
+# ============================================================
+# CHECK SUBSCRIPTION FROM MENU
+# ============================================================
+
+@router.callback_query(
+    F.data == "check_sub_from_menu"
+)
+async def check_sub_from_menu(
+    callback: CallbackQuery,
+    bot: Bot
+):
     from handlers.start import check_sub_again
-    await check_sub_again(callback, bot)
 
-@router.callback_query(F.data == "no_link")
-async def no_link_warning(callback: CallbackQuery):
-    await callback.answer("⚠️ Ushbu kanal uchun admin tomonidan havola kiritilmagan!", show_alert=True)
+    await check_sub_again(
+        callback,
+        bot
+    )
 
-@router.callback_query(F.data == "menu_help")
-async def show_help(callback: CallbackQuery):
+
+# ============================================================
+# NO LINK
+# ============================================================
+
+@router.callback_query(
+    F.data == "no_link"
+)
+async def no_link_warning(
+    callback: CallbackQuery
+):
+    await callback.answer(
+        "⚠️ No link provided for this channel by admin!",
+        show_alert=True
+    )
+
+
+# ============================================================
+# HELP
+# ============================================================
+
+@router.callback_query(
+    F.data == "menu_help"
+)
+async def show_help(
+    callback: CallbackQuery
+):
     await callback.answer()
-    text = "❓ <b>Yordam</b>\n\n1. Kanallarga obuna bo'ling.\n2. Havolani do'stlaringizga yuboring.\n3. Kerakli miqdorni to'ldiring va mukofot oling."
-    await safe_edit(callback, text, reply_markup=back_to_main_kb())
 
-@router.callback_query(F.data == "back_to_main")
-async def back_to_main(callback: CallbackQuery):
+    text = (
+        "❓ <b>Help</b>\n\n"
+        "1. Subscribe to the channels.\n"
+        "2. Share your link with friends.\n"
+        "3. Reach the required amount "
+        "to get the reward."
+    )
+
+    await safe_edit(
+        callback,
+        text,
+        reply_markup=main_menu_kb()
+    )
+
+
+# ============================================================
+# BACK
+# ============================================================
+
+@router.callback_query(
+    F.data == "back_to_main"
+)
+async def back_to_main(
+    callback: CallbackQuery
+):
     await callback.answer()
-    text = "Assalomu alaykum! Botga xush kelibsiz.\n\nQuyidagi menyu orqali boshlang:"
-    await safe_edit(callback, text, reply_markup=main_menu_kb())
+
+    text = (
+        "Welcome to the bot!\n\n"
+        "Please choose an option "
+        "from the menu below:"
+    )
+
+    await safe_edit(
+        callback,
+        text,
+        reply_markup=main_menu_kb()
+    )
